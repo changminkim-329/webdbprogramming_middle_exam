@@ -47,29 +47,13 @@ app.get('/register', (req, res) => {
 })
 
 app.post('/register', (req, res) => {
-    pool.getConnection((err, conn)=>{
-        if (err) throw err;
-        console.log("성공");
-        // conn.query("select * from user", (err,result)=>{
-        //     if (err) throw err;
-        //     console.log(result);
-            
-        // });
-        let req_body = req.body;
-        console.log(req.body);
-        let insert = "INSERT INTO USER (USERNAME,EMAIL,PASS) VALUES ('"+req_body['username']+"','"+req_body['email']+"','"+req_body['password']+"');";
-        console.log(insert);
-        conn.query(insert,(err,result)=>{
-            if (err) throw err;
-            console.log(result);
-            let user_data = {"username":req_body['username'],"email":req_body['email'],"pass":req_body['password'],'login_count':0,'imported':0}
-            jsonData.push(user_data);
-            console.log(jsonData);
-            fs.writeFileSync("users.json",JSON.stringify(jsonData));
-        });
-    
-        conn.release();
-    })
+    let req_body = req.body;
+    console.log(req.body);
+    let user_data = {"username":req_body['username'],"email":req_body['email'],"pass":req_body['password'],'login_count':0,'imported':0}
+    jsonData.push(user_data);
+    console.log(jsonData);
+    fs.writeFileSync("users.json",JSON.stringify(jsonData));
+
     res.sendFile(__dirname+"/register/register.html");
 })
 
@@ -81,24 +65,25 @@ app.post('/login', (req, res) => {
         let req_body = req.body;
         console.log(req.body);
 
-        let query = "select * from user where email ='"+req_body['email']+"' AND pass = '"+req_body['password']+"'"
-        console.log(query)
-        console.log(jsonData);
-        conn.query(query, (err,result)=>{
-            if (err) throw err;
-            console.log(result);
-            if (result != 0){
-                console.log(result);
+        for (i in jsonData){
+            if (jsonData[i]['email'] == req_body['email']){
+                jsonData[i]['login_count'] += 1;
+                fs.writeFileSync("users.json",JSON.stringify(jsonData));
 
-                for (i in jsonData){
-                    if (jsonData[i]['email'] == req_body['email']){
-                        jsonData[i]['login_count'] += 1;
-                        fs.writeFileSync("users.json",JSON.stringify(jsonData));
-                    }
+                if (jsonData[i]['login_count'] >=5 && jsonData[i]['imported']<=0){
+                    jsonData[i]['imported'] += 1;
+                    fs.writeFileSync("users.json",JSON.stringify(jsonData));
+                    let req_body = jsonData[i];
+                    console.log(req.body);
+                    let insert = "INSERT INTO USER (USERNAME,EMAIL,PASS) VALUES ('"+req_body['username']+"','"+req_body['email']+"','"+req_body['pass']+"');";
+                    console.log(insert);
+                    conn.query(insert,(err,result)=>{
+                        if (err) throw err;
+                        console.log(result);
+                    });
                 }
             }
-            
-        });
+        }
     
         conn.release();
     })
