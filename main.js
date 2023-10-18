@@ -66,7 +66,7 @@ app.post('/login', (req, res) => {
         console.log(req.body);
 
         for (i in jsonData){
-            if (jsonData[i]['email'] == req_body['email']){
+            if (jsonData[i]['email'] == req_body['email'] && jsonData[i]['pass'] == req_body['password']){
                 jsonData[i]['login_count'] += 1;
                 fs.writeFileSync("users.json",JSON.stringify(jsonData));
 
