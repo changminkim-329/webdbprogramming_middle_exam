@@ -1,0 +1,102 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+
+    <link rel="stylesheet" href="static/css/signup.css">
+</head>
+<body>
+    <div class="form">
+      
+        <ul class="tab-group">
+          <li class="tab active"><a id="signup-button" href="#signup" onclick="onclickfunc(this)">Sign Up</a></li>
+          <li class="tab"><a id="login-button", href="#login" onclick="onclickfunc(this)">Log In</a></li>
+        </ul>
+        
+        <div class="tab-content">
+          <div id="signup">   
+            <h1>중간고사 시험: 회원가입</h1>
+            
+            <form action="/register" method="post">
+            
+            <div class="top-row">
+              <div class="field-wrap">
+                <label>
+                  username
+                </label>
+                <input type="text" required autocomplete="off" name="username" />
+              </div>
+            </div>
+    
+            <div class="field-wrap">
+              <label>
+                Email
+              </label>
+              <input type="email"required autocomplete="off" name="email"/>
+            </div>
+            
+            <div class="field-wrap">
+              <label>
+                Password
+              </label>
+              <input type="password"required autocomplete="off" name="password"/>
+            </div>
+            
+            <button type="submit" class="button button-block"/>Register</button>
+            
+            </form>
+    
+          </div>
+          
+          <div id="login">   
+            <h1>중간고사 시험: 로그인</h1>
+            
+            <form action="/login" method="post">
+            
+              <div class="field-wrap">
+              <label>
+                Email
+              </label>
+              <input type="email"required autocomplete="off" name="email"/>
+            </div>
+            
+            <div class="field-wrap">
+              <label>
+                Password
+              </label>
+              <input type="password"required autocomplete="off" name="password"/>
+            </div>
+            
+            <button class="button button-block"/>Log In</button>
+            
+            </form>
+    
+          </div>
+          
+        </div><!-- tab-content -->
+        
+    </div> <!-- /form -->
+    <script>
+        function onclickfunc(event){
+            console.log(event);
+            console.log(event.id, event.href, event.id);
+
+            if (event.id == "login-button"){
+                let login_button = document.getElementById("login");
+                login_button.style.display = "block";
+                let signup_button = document.getElementById("signup");
+                signup_button.style.display = "none";
+            }
+            else{
+                let login_button = document.getElementById("login");
+                login_button.style.display = "none";
+                let signup_button = document.getElementById("signup");
+                signup_button.style.display = "block";
+            }
+        }
+    </script>
+</body>
+</html>
+
